@@ -1,8 +1,10 @@
 # 🍕 C++ Pizza Patterns – A Modern Take on Factory Design Patterns
 
-[![Build](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/iban-rodriguez/pizza-patterns/actions)
+![Cobertura](https://raw.githubusercontent.com/errowdrigorena/pizza_factory/main/badges/coverage.svg)
+
+[![Build](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/errowdrigorena/pizza_factory/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Coverage](https://img.shields.io/badge/coverage-92%25-brightgreen)](https://github.com/iban-rodriguez/pizza-patterns/actions)
+[![Coverage](https://img.shields.io/badge/coverage-92%25-brightgreen)](https://github.com/errowdrigorena/pizza_factory/actions)
 
 This project is a polished demonstration of two foundational creational design patterns—**Factory Method** and **Abstract Factory**—implemented in modern, guideline-compliant C++20. It showcases not only mastery of the patterns themselves but also best practices in extensibility, testing, CI, and code hygiene.
 
@@ -36,8 +38,8 @@ Naive implementations of Factory Method or Abstract Factory often rely heavily o
 ## ▶️ Quick Start
 
 ```bash
-git clone https://github.com/iban-rodriguez/pizza-patterns.git
-cd pizza-patterns
+git clone https://github.com/errowdrigorena/pizza_factory.git
+cd pizza_factory
 cmake -B build
 cmake --build build
 ctest --test-dir build

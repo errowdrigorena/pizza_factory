@@ -1,5 +1,4 @@
-
-name: Build and Test with Coverage
+name: Coverage
 
 on:
   push:
@@ -7,35 +6,75 @@ on:
   pull_request:
     branches: [ main ]
 
-jobs:
-  build-test-coverage:
-    runs-on: ubuntu-latest
+permissions:
+  contents: write  # Necesario para hacer push del badge
+  pull-requests: write  # Necesario para comentar en PRs
 
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0  # Necesario para el historial completo de git
 
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y cmake g++ lcov gcovr libgtest-dev
+        sudo apt-get install -y lcov
 
-    - name: Configure
-      run: cmake -B build -DCMAKE_BUILD_TYPE=Debug -DENABLE_TESTING=ON
+    - name: Configure CMake
+      run: |
+        cmake -B build -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON
 
     - name: Build
-      run: cmake --build build
+      run: |
+        cmake --build build
 
-    - name: Run tests
-      run: cd build && ctest --output-on-failure
-
-    - name: Generate coverage report
+    - name: Run tests with coverage
       run: |
         cd build
-        gcovr -r .. --html --html-details -o coverage.html
+        ctest --output-on-failure
+        lcov --capture --directory . --output-file coverage.info
+        lcov --remove coverage.info '/usr/*' --output-file coverage.info
+        lcov --remove coverage.info '*/build/*' --output-file coverage.info
+        lcov --remove coverage.info '*/tests/*' --output-file coverage.info
+        genhtml coverage.info --output-directory coverage_report
 
     - name: Upload coverage report
       uses: actions/upload-artifact@v3
       with:
         name: coverage-report
-        path: build/coverage.html
+        path: build/coverage_report
+
+    - name: Update coverage badge
+      run: |
+        cd build
+        COV=$(lcov --summary coverage.info | grep "lines" | sed -E 's/.*: +([0-9]+\.[0-9]+)%.*/\1/')
+        mkdir -p ../badges
+        curl -o ../badges/coverage.svg "https://img.shields.io/badge/coverage-${COV}%25-brightgreen"
+        cd ..
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git add badges/coverage.svg
+        if git diff --staged --quiet; then
+          echo "No hay cambios en el badge de cobertura"
+        else
+          git commit -m "docs: actualizar badge de cobertura [skip ci]"
+          git push
+        fi
+
+    - name: Comment PR
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          const cov = fs.readFileSync('build/coverage.info', 'utf8')
+            .match(/lines\.\.\.: +([0-9]+\.[0-9]+)%/)[1];
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: `✅ Cobertura de código: **${cov}%**\n\nPuedes ver el reporte detallado en los artefactos de la acción.`
+          });
