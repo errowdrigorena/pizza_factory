@@ -1,0 +1,35 @@
+# Ignorar directorio build generado por CMake
+build/
+
+# Ignorar archivos de caché de CMake (por ejemplo, CMakeCache.txt, CMakeFiles, etc.)
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+CTestTestfile.cmake
+_deps/
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+
+# Ignorar archivos de caché de Cursor (por ejemplo, .cursor-cache)
+.cursor-cache
+
+# Ignorar archivos de caché de C++ (por ejemplo, archivos .o, .so, .a, etc.)
+*.o
+*.so
+*.a
+*.dylib
+*.dll
+*.exe
+
+# Ignorar archivos de caché de C++ (por ejemplo, archivos de caché de compilador, archivos de caché de IDE, etc.)
+*.cache
+*.swp
+*~
+
+# Ignorar archivos de caché de C++ (por ejemplo, archivos de caché de compilador, archivos de caché de IDE, etc.)
+.vscode/
+.idea/
+*.user
+*.suo
+*.sln.docstates 

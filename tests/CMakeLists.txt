@@ -25,4 +25,5 @@ target_include_directories(test_runner PRIVATE
     ${CMAKE_SOURCE_DIR}/examples/abstract_factory
 )
 
-add_test(NAME all_tests COMMAND test_runner)
+include(GoogleTest)
+gtest_discover_tests(test_runner)
