@@ -1,5 +1,13 @@
 add_executable(factory_method_main factory_method/main.cpp)
 target_include_directories(factory_method_main PRIVATE ${CMAKE_SOURCE_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/factory_method)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    target_compile_options(factory_method_main PRIVATE --coverage -O0)
+    target_link_libraries(factory_method_main PRIVATE --coverage)
+endif()
 
 add_executable(abstract_factory_main abstract_factory/main.cpp)
 target_include_directories(abstract_factory_main PRIVATE ${CMAKE_SOURCE_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/abstract_factory)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    target_compile_options(abstract_factory_main PRIVATE --coverage -O0)
+    target_link_libraries(abstract_factory_main PRIVATE --coverage)
+endif()
