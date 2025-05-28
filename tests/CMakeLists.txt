@@ -50,9 +50,9 @@ FetchContent_Declare(lcov
 FetchContent_MakeAvailable(lcov)
 # (Opcional: agregar un target (por ejemplo, coverage) que ejecute (por ejemplo, con add_custom_target) lcov (por ejemplo, con COMMAND lcov --directory . --capture --output-file coverage.info && lcov --remove coverage.info '/usr/*' '*/_deps/*' --output-file coverage.info && genhtml coverage.info --output-directory coverage_report) para generar el informe de cobertura.)
  add_custom_target(coverage
- COMMAND lcov --directory . --capture --output-file coverage.info
+ COMMAND lcov --directory . --capture --output-file coverage.info --ignore-errors mismatch
  COMMAND lcov --remove coverage.info '/usr/*' '*/_deps/*' --output-file coverage.info
- COMMAND genhtml coverage.info --output-directory coverage_report
+ COMMAND genhtml coverage.info --output-directory coverage_report --ignore-errors mismatch
  DEPENDS pizza_tests
  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
  COMMENT "Generando informe de cobertura (lcov) ..."
