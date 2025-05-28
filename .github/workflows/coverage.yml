@@ -44,9 +44,9 @@ jobs:
 
     - name: Check coverage.info exists
       run: |
-        cd build
+        cd build/tests
         if [ ! -f coverage.info ]; then
-          echo "Error: coverage.info no se generó. Revisa el paso de generación del informe de cobertura."
+          echo "Error: coverage.info was not generated. Please check the coverage report generation step."
           exit 1
         fi
 
@@ -54,13 +54,13 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: coverage-report
-        path: build/coverage_report
+        path: build/tests/coverage_report
         retention-days: 5
 
     - name: Calculate coverage percentage
       id: coverage
       run: |
-        cd build
+        cd build/tests
         echo "Raw lcov summary:"
         lcov --summary coverage.info
         echo "Extracting coverage percentage..."
