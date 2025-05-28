@@ -13,7 +13,7 @@ This project demonstrates a modern and professional implementation of the **Fact
 - ✅ **Extensible**: Add new pizza types, ingredients, or doughs without modifying existing code
 - ✅ **Maintainable**: Clean, well-documented code following modern style guides
 - ✅ **Testable**: Complete test coverage with GoogleTest
-- ✅ **Modern**: Utilizes C++17 features like `std::optional`, `std::variant`, and smart pointers
+- ✅ **Modern**: Utilizes C++17 features like smart pointers and move semantics
 
 ## 🏗️ Architecture
 
@@ -23,13 +23,48 @@ The project implements a composition-based architecture following the Open/Close
 📦 PizzaFactory
 ├── 🏭 Factory Method
 │   ├── PizzaStore (interface)
+│   │   ├── order(type: string) -> unique_ptr<Pizza>
 │   ├── NYPizzaStore
+│   │   ├── Thin crust dough
+│   │   ├── Marinara sauce
+│   │   └── Reggiano cheese
 │   └── ChicagoPizzaStore
+│       ├── Thick crust dough
+│       ├── Plum tomato sauce
+│       └── Mozzarella cheese
 └── 🏭 Abstract Factory
     ├── IngredientFactory (interface)
-    ├── NYIngredientFactory
     └── ChicagoIngredientFactory
+        ├── createDough() -> ThickCrustDough
+        ├── createSauce() -> PlumTomatoSauce
+        └── createCheese() -> MozzarellaCheese
 ```
+
+## 📖 Implementation Details
+
+### Factory Method Pattern
+
+The Factory Method pattern is implemented through two concrete pizza stores:
+
+#### NYPizzaStore
+- Uses thin crust dough for a crispy texture
+- Implements NY-style pizza creation with specific ingredients
+- Available pizzas: cheese, pepperoni, pineapple, bacon, and veggie
+
+#### ChicagoPizzaStore
+- Uses thick crust dough for a deep-dish style
+- Implements Chicago-style pizza creation with specific ingredients
+- Available pizzas: cheese, pepperoni, pineapple, bacon, and veggie
+- Each pizza is created with Chicago-style ingredients (thick crust, mozzarella cheese, etc.)
+
+### Abstract Factory Pattern
+
+The Abstract Factory pattern is implemented through the ingredient factory system:
+
+#### ChicagoIngredientFactory
+- Creates a family of Chicago-style ingredients
+- Produces thick crust dough, plum tomato sauce, and mozzarella cheese
+- Each ingredient is created with specific Chicago-style characteristics
 
 ## 🚀 Getting Started
 
@@ -58,71 +93,121 @@ ctest --test-dir build --output-on-failure
 
 ### Factory Method Pattern
 
-The Factory Method pattern is demonstrated through the `PizzaStore` hierarchy, where each store implements its own way of creating pizzas:
+The Factory Method pattern is demonstrated through the `PizzaStore` hierarchy. Here's a complete example showing how to use both stores:
 
 ```cpp
-#include "pizza_store.hpp"
 #include "ny_pizza_store.hpp"
 #include "chicago_pizza_store.hpp"
+#include <iostream>
+#include <vector>
 
 int main() {
-    // Create different pizza stores
-    auto nyStore = std::make_unique<NYPizzaStore>();
-    auto chicagoStore = std::make_unique<ChicagoPizzaStore>();
+    // Create both pizza stores
+    NyPizzaStore nyStore;
+    ChicagoPizzaStore chicagoStore;
 
-    // Each store creates pizzas in its own way
-    auto nyPizza = nyStore->orderPizza("cheese");    // Creates NY style pizza
-    auto chicagoPizza = chicagoStore->orderPizza("cheese");  // Creates Chicago style pizza
+    // List of pizza types to order
+    std::vector<std::string> orders = { 
+        "cheese", "pepperoni", "pineapple", "bacon", "veggie" 
+    };
+
+    // Order from NY store
+    std::cout << "Ordering from NY store:\n";
+    for (const auto& type : orders) {
+        auto pizza = nyStore.order(type);
+        std::cout << "Ordered a " << type << " pizza: " 
+                  << pizza->description() << std::endl;
+    }
+
+    // Order from Chicago store
+    std::cout << "\nOrdering from Chicago store:\n";
+    for (const auto& type : orders) {
+        auto pizza = chicagoStore.order(type);
+        std::cout << "Ordered a " << type << " pizza: " 
+                  << pizza->description() << std::endl;
+    }
 }
+```
+
+#### Expected Output
+```
+Ordering from NY store:
+Ordered a cheese pizza: Thin Crust Dough dough pizza with Mozzarella Cheese
+Ordered a pepperoni pizza: Thin Crust Dough dough pizza with Spicy Pepperoni, Mozzarella Cheese
+Ordered a pineapple pizza: Thin Crust Dough dough pizza with Fresh Pineapple, Mozzarella Cheese
+Ordered a bacon pizza: Thin Crust Dough dough pizza with Crispy Bacon, Mozzarella Cheese
+Ordered a veggie pizza: Thin Crust Dough dough pizza with Sliced Tomato, Mozzarella Cheese
+
+Ordering from Chicago store:
+Ordered a cheese pizza: Thick Crust Dough dough pizza with Mozzarella Cheese
+Ordered a pepperoni pizza: Thick Crust Dough dough pizza with Spicy Pepperoni, Mozzarella Chees
+e
+Ordered a pineapple pizza: Thick Crust Dough dough pizza with Fresh Pineapple, Mozzarella Chees
+e
+Ordered a bacon pizza: Thick Crust Dough dough pizza with Crispy Bacon, Mozzarella Cheese
+Ordered a veggie pizza: Thick Crust Dough dough pizza with Sliced Tomato, Mozzarella Cheese
 ```
 
 ### Abstract Factory Pattern
 
-The Abstract Factory pattern is shown through the `IngredientFactory` hierarchy, which creates families of related ingredients:
+The Abstract Factory pattern is demonstrated through the ingredient factory system:
 
 ```cpp
-#include "ingredient_factory.hpp"
-#include "ny_ingredient_factory.hpp"
 #include "chicago_ingredient_factory.hpp"
+#include <iostream>
 
 void demonstrateIngredientFactory() {
-    // Create different ingredient factories
-    auto nyFactory = std::make_unique<NYIngredientFactory>();
-    auto chicagoFactory = std::make_unique<ChicagoIngredientFactory>();
+    ChicagoIngredientFactory factory;
 
-    // Each factory creates a family of related ingredients
-    auto nyDough = nyFactory->createDough();      // Creates thin crust
-    auto nySauce = nyFactory->createSauce();      // Creates marinara sauce
-    auto nyCheese = nyFactory->createCheese();    // Creates reggiano cheese
+    // Create a family of Chicago-style ingredients
+    auto dough = factory.createDough();      // Creates thick crust
+    auto pepperoni = factory.createPepperoni(); // Creates spicy pepperoni
 
-    auto chicagoDough = chicagoFactory->createDough();    // Creates thick crust
-    auto chicagoSauce = chicagoFactory->createSauce();    // Creates plum tomato sauce
-    auto chicagoCheese = chicagoFactory->createCheese();  // Creates mozzarella cheese
+    std::cout << "Factory (Chicago) produces: " << dough->description() 
+              << " dough and " << pepperoni->description() << " topping." << std::endl;
 }
 ```
 
-### Pattern Interaction
+#### Expected Output
+```
+Factory (Chicago) produces: Thick Crust Dough dough and Spicy Pepperoni topping.
+```
 
-The two patterns work together in the following way:
+### Running the Examples
 
-1. `PizzaStore` (Factory Method) defines the interface for creating pizzas
-2. Each concrete store (e.g., `NYPizzaStore`) implements its own pizza creation method
-3. The stores use `IngredientFactory` (Abstract Factory) to create the ingredients
-4. Each concrete factory (e.g., `NYIngredientFactory`) creates a family of related ingredients
+To run the examples and see the results:
 
-This demonstrates how the patterns can be combined to create flexible and extensible object creation systems.
+```bash
+# Run Factory Method example
+./build/examples/factory_method/factory_method_main
+# This will show pizzas from both NY and Chicago stores with their specific ingredients
+
+# Run Abstract Factory example
+./build/examples/abstract_factory/abstract_factory_main
+# This will demonstrate the creation of Chicago-style ingredients
+```
+
+Each example demonstrates different aspects of the design patterns:
+- The Factory Method example shows how different stores create pizzas with their own styles
+- The Abstract Factory example shows how to create families of related ingredients
 
 ## 🧪 Testing
 
-The project uses GoogleTest for unit testing. To run tests with coverage:
+The project uses GoogleTest for unit testing. Tests cover both the Factory Method and Abstract Factory implementations:
 
 ```bash
-# Run tests with coverage
+# Run all tests
 cd build
 ctest --output-on-failure
-lcov --capture --directory . --output-file coverage.info
-genhtml coverage.info --output-directory coverage_report
+
+# Run tests with coverage
+make coverage
 ```
+
+The test suite includes:
+- Factory Method tests for both NY and Chicago pizza stores
+- Abstract Factory tests for ingredient creation
+- Edge cases and error handling
 
 ## 🛠️ Tech Stack
 
@@ -134,24 +219,13 @@ genhtml coverage.info --output-directory coverage_report
   - Clang-Tidy
   - Clang-Format
 - **Coverage**: LCOV
-- **Documentation**: Doxygen (coming soon)
 
 ## 📚 Implemented Design Patterns
 
 | Pattern | Purpose | Example |
 |---------|---------|---------|
-| Factory Method | Create product variants | `PizzaStore::orderPizza("cheese")` |
-| Abstract Factory | Compose families of related objects | `IngredientFactory::createDough()` |
-
-## 🤝 Contributing
-
-Contributions are welcome. Please ensure you:
-
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+| Factory Method | Create pizza variants | `PizzaStore::order("cheese")` |
+| Abstract Factory | Create ingredient families | `IngredientFactory::createDough()` |
 
 ## 📄 License
 
