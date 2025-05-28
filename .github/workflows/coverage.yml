@@ -6,78 +6,64 @@ on:
   pull_request:
     branches: [ main ]
 
-permissions:
-  contents: write  # Necesario para hacer push del badge
-  pull-requests: write  # Necesario para comentar en PRs
-
 jobs:
   coverage:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
     steps:
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 0  # Necesario para el historial completo de git
+    - uses: actions/checkout@v4
 
     - name: Install dependencies
       run: |
         sudo apt-get update
         sudo apt-get install -y lcov
 
-    - name: Configure CMake
+    - name: Configure
       run: |
-        cmake -B build -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON
+        mkdir build
+        cd build
+        cmake -DCMAKE_BUILD_TYPE=Debug ..
 
     - name: Build
       run: |
-        cmake --build build
+        cd build
+        cmake --build .
 
-    - name: Run tests with coverage
+    - name: Test
       run: |
         cd build
         ctest --output-on-failure
-        lcov --capture --directory . --output-file coverage.info
-        lcov --remove coverage.info '/usr/*' --output-file coverage.info
-        lcov --remove coverage.info '*/build/*' --output-file coverage.info
-        lcov --remove coverage.info '*/tests/*' --output-file coverage.info
-        genhtml coverage.info --output-directory coverage_report
+
+    - name: Generate coverage report
+      run: |
+        cd build
+        make coverage
 
     - name: Upload coverage report
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: coverage-report
         path: build/coverage_report
+        retention-days: 5
+
+    - name: Calculate coverage percentage
+      id: coverage
+      run: |
+        cd build
+        COV=$(lcov --summary coverage.info | grep "lines" | sed -e "s/.*: \([0-9]*\.[0-9]*\)%.*/\1/")
+        echo "coverage=$COV" >> $GITHUB_OUTPUT
 
     - name: Update coverage badge
       run: |
-        cd build
-        COV=$(lcov --summary coverage.info | grep "lines" | sed -E 's/.*: +([0-9]+\.[0-9]+)%.*/\1/')
-        mkdir -p ../badges
-        curl -o ../badges/coverage.svg "https://img.shields.io/badge/coverage-${COV}%25-brightgreen"
-        cd ..
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+        mkdir -p badges
+        curl -o badges/coverage.svg "https://img.shields.io/badge/coverage-${{ steps.coverage.outputs.coverage }}%25-brightgreen"
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "actions@github.com"
         git add badges/coverage.svg
-        if git diff --staged --quiet; then
-          echo "No hay cambios en el badge de cobertura"
-        else
-          git commit -m "docs: actualizar badge de cobertura [skip ci]"
-          git push origin HEAD:${GITHUB_REF#refs/heads/}
+        if [ -n "$(git status --porcelain)" ]; then
+          git commit -m "Update coverage badge"
+          git push
         fi
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Comment PR
-      if: github.event_name == 'pull_request'
-      uses: actions/github-script@v6
-      with:
-        script: |
-          const fs = require('fs');
-          const cov = fs.readFileSync('build/coverage.info', 'utf8')
-            .match(/lines\.\.\.: +([0-9]+\.[0-9]+)%/)[1];
-          github.rest.issues.createComment({
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: `✅ Cobertura de código: **${cov}%**\n\nPuedes ver el reporte detallado en los artefactos de la acción.`
-          });
