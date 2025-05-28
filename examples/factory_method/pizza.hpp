@@ -2,7 +2,7 @@
 #include <memory>
 #include <vector>
 #include <string>
-#include "ingredients.hpp"
+#include "ingredients/ingredients.hpp"
 
 // Pizza compuesta por una masa y un conjunto de toppings
 class Pizza {

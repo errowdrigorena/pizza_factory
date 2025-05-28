@@ -8,7 +8,7 @@ int main() {
     std::vector<std::string> orders = { "cheese", "pepperoni", "pineapple", "bacon", "veggie" };
 
     for (const auto& type : orders) {
-        auto pizza = store.order_pizza(type);
+        auto pizza = store.order(type);
         std::cout << "Ordered a pizza: " << pizza->description() << std::endl;
     }
 

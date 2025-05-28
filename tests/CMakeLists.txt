@@ -1,4 +1,3 @@
-
 include(CTest)
 enable_testing()
 
@@ -16,6 +15,14 @@ target_link_libraries(test_runner
     gtest
     gtest_main
     pthread
+)
+
+target_include_directories(test_runner PRIVATE 
+    ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/include/ingredients
+    ${CMAKE_SOURCE_DIR}/include/factory
+    ${CMAKE_SOURCE_DIR}/examples/factory_method
+    ${CMAKE_SOURCE_DIR}/examples/abstract_factory
 )
 
 add_test(NAME all_tests COMMAND test_runner)

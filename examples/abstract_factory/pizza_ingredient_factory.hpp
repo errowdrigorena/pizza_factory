@@ -1,5 +1,5 @@
 #pragma once
-#include "ingredients.hpp"
+#include "ingredients/ingredients.hpp"
 #include <memory>
 
 class PizzaIngredientFactory {

@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 #include "ingredients.hpp"
 
 class ThinCrustDough : public Dough {
@@ -29,4 +30,9 @@ public:
 class Tomato : public Topping {
 public:
     std::string description() const override { return "Sliced Tomato"; }
+};
+
+class MozzarellaCheese : public Topping {
+public:
+    std::string description() const override { return "Mozzarella Cheese"; }
 };

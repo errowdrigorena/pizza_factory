@@ -1,4 +1,3 @@
-
 #include "ny_pizza_store.hpp"
 #include <iostream>
 #include <chrono>
@@ -12,7 +11,7 @@ int main() {
 
     for (int i = 0; i < iterations; ++i) {
         for (const auto& type : orders) {
-            auto pizza = store.order_pizza(type);
+            auto pizza = store.order(type);
         }
     }
 
