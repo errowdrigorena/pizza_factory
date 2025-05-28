@@ -56,13 +56,16 @@ jobs:
         cd ..
         git config --global user.name "github-actions[bot]"
         git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
         git add badges/coverage.svg
         if git diff --staged --quiet; then
           echo "No hay cambios en el badge de cobertura"
         else
           git commit -m "docs: actualizar badge de cobertura [skip ci]"
-          git push
+          git push origin HEAD:${GITHUB_REF#refs/heads/}
         fi
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Comment PR
       if: github.event_name == 'pull_request'
