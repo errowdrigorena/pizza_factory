@@ -1,0 +1,41 @@
+
+name: Build and Test with Coverage
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-test-coverage:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake g++ lcov gcovr libgtest-dev
+
+    - name: Configure
+      run: cmake -B build -DCMAKE_BUILD_TYPE=Debug -DENABLE_TESTING=ON
+
+    - name: Build
+      run: cmake --build build
+
+    - name: Run tests
+      run: cd build && ctest --output-on-failure
+
+    - name: Generate coverage report
+      run: |
+        cd build
+        gcovr -r .. --html --html-details -o coverage.html
+
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v3
+      with:
+        name: coverage-report
+        path: build/coverage.html

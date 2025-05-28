@@ -1,0 +1,2 @@
+add_executable(factory_method_main examples/factory_method/main.cpp)
+target_include_directories(factory_method_main PRIVATE include examples/factory_method)
