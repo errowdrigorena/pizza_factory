@@ -1,6 +1,9 @@
 # Ignorar directorio build generado por CMake
 build/
 
+# Ignorar carpeta de testing generada por CTest/CMake
+Testing/
+
 # Ignorar archivos de caché de CMake (por ejemplo, CMakeCache.txt, CMakeFiles, etc.)
 CMakeCache.txt
 CMakeFiles/
@@ -32,4 +35,4 @@ compile_commands.json
 .idea/
 *.user
 *.suo
-*.sln.docstates 
+*.sln.docstates
