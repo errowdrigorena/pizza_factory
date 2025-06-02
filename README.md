@@ -8,10 +8,15 @@
 
 ## 📋 Overview
 
-This project demonstrates a modern and professional implementation of the **Factory Method** and **Abstract Factory** design patterns using C++17. The code follows industry best practices and is designed to be:
+This project provides highly reusable and generic utilities for building and extending the **Factory Method** and **Abstract Factory** design patterns in C++17. Rather than focusing on a single implementation, it offers flexible building blocks (`concrete_creator` and `dynamic_factory`) that make it trivial to create, compose, and reuse factories in any domain.
 
-- ✅ **Extensible**: Add new pizza types, ingredients, or doughs without modifying existing code
+The pizza example is used as a nod to "Head First Design Patterns"—the first design patterns book I read, and likely the first for many developers. It is chosen simply to avoid unnecessary friction and to provide a familiar context. Ultimately, only two files (`concrete_creator` and `dynamic_factory`) are the real focus of this project; everything else exists to demonstrate how they work and to prove their correctness in practice.
+
+The code follows industry best practices and is designed to be:
+
+- ✅ **Reusable**: The core of this project is not just the implementation of design patterns, but the provision of generic utilities (`concrete_creator` and `dynamic_factory` in `include/factory/`) that make it extremely easy to build and extend Factory Method and Abstract Factory patterns. These utilities are not patterns themselves, but highly reusable building blocks that enable type-safe, decoupled, and extensible object creation for any domain, not just the pizza example.
 - ✅ **Maintainable**: Clean, well-documented code following modern style guides
+- ✅ **Flexible**: The provided files are not direct pattern implementations, but reusable elements that make the construction of concrete and dynamic factories trivial. Their design allows them to be used for classic patterns or any scenario requiring flexible, decoupled object instantiation, making them valuable beyond the scope of design patterns alone.
 - ✅ **Testable**: Complete test coverage with GoogleTest
 - ✅ **Modern**: Utilizes C++17 features like smart pointers and move semantics
 
@@ -219,6 +224,29 @@ The test suite includes:
   - Clang-Tidy
   - Clang-Format
 - **Coverage**: LCOV
+
+## 🛠️ Additional Tooling & Notes
+
+- **LCOV (Coverage):**
+  - LCOV is required to generate code coverage reports. On most Linux systems, you can install it with:
+    ```bash
+    sudo apt install lcov
+    ```
+  - After installation, running `make coverage` in the build directory will generate a coverage report.
+
+- **GoogleTest:**
+  - GoogleTest is automatically downloaded and configured as part of the CMake build process. You do not need to install it manually; CMake will handle everything for you.
+
+- **Clang-Tidy & Clang-Format:**
+  - These tools are used for static analysis and code formatting. They are optional but recommended for maintaining code quality and consistency.
+  - Install them with:
+    ```bash
+    sudo apt install clang-tidy clang-format
+    ```
+  - You can run them manually on your source files, or integrate them into your editor or CI pipeline.
+
+- **CMake:**
+  - The project requires CMake 3.16 or higher. All dependencies and build steps are managed through CMake for portability and reproducibility.
 
 ## 📚 Implemented Design Patterns
 
