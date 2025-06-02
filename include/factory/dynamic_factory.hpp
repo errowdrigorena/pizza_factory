@@ -1,26 +1,56 @@
 #pragma once
+
 #include <unordered_map>
 #include <memory>
 #include <functional>
+#include <iostream>
+#include <type_traits>
 #include <stdexcept>
 
-template<class AbstractProduct, typename IdentifierType>
-class Dynamic_factory {
+// TDynamicFactory is a generic dynamic factory for runtime object creation.
+// You register creators (functions or lambdas) identified by a key (typically an enum or string),
+// and later use that key to create instances of derived classes from a common base.
+template
+<
+    class AbstractProduct,
+    typename IdentifierType,
+    typename ProductCreator = std::function<std::unique_ptr<AbstractProduct>()>
+>
+class Dynamic_factory
+{
 public:
-    using Creator = std::function<std::unique_ptr<AbstractProduct>()>;
-
-    void add_creator(const IdentifierType& id, Creator creator) {
-        creators_[id] = std::move(creator);
+    void register_creator(const IdentifierType& id, ProductCreator creator)
+    {
+        associations_[id] = std::move(creator);
     }
 
-    std::unique_ptr<AbstractProduct> make(const IdentifierType& id) const {
-        auto it = creators_.find(id);
-        if (it != creators_.end()) {
-            return it->second();
+    bool unregister_creator(const IdentifierType& id)
+    {
+        return associations_.erase(id) == 1;
+    }
+
+    // Creates an object using the creator associated with the identifier.
+    // Arguments are perfectly forwarded to the creator function.
+    // Throws std::out_of_range if the identifier is not found.
+    template<typename... Args>
+    [[nodiscard]] std::invoke_result_t<ProductCreator, Args...>
+    make(const IdentifierType& id, Args&&... args) const
+    {
+        auto it = associations_.find(id);
+        if (it == associations_.end())
+        {
+            throw std::out_of_range("Dynamic_factory: identifier not registered.");
         }
-        throw std::runtime_error("Unknown identifier");
+        return it->second(std::forward<Args>(args)...);
+    }
+
+    // Returns true if no creators are registered.
+    [[nodiscard]] bool is_empty() const
+    {
+        return associations_.empty();
     }
 
 private:
-    std::unordered_map<IdentifierType, Creator> creators_;
+    using CreatorContainer = std::unordered_map<IdentifierType, ProductCreator>;
+    CreatorContainer associations_;
 };

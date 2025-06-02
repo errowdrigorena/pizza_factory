@@ -11,11 +11,11 @@
 class NyPizzaStore {
 public:
     NyPizzaStore() {
-        pizza_factory_.add_creator("cheese", &create_ny_cheese_pizza);
-        pizza_factory_.add_creator("bacon", &create_ny_bacon_pizza);
-        pizza_factory_.add_creator("pepperoni", &create_ny_pepperoni_pizza);
-        pizza_factory_.add_creator("pineapple", &create_ny_pineapple_pizza);
-        pizza_factory_.add_creator("veggie", &create_ny_veggie_pizza);
+        pizza_factory_.register_creator("cheese", &create_ny_cheese_pizza);
+        pizza_factory_.register_creator("bacon", &create_ny_bacon_pizza);
+        pizza_factory_.register_creator("pepperoni", &create_ny_pepperoni_pizza);
+        pizza_factory_.register_creator("pineapple", &create_ny_pineapple_pizza);
+        pizza_factory_.register_creator("veggie", &create_ny_veggie_pizza);
     }
 
     [[nodiscard]]

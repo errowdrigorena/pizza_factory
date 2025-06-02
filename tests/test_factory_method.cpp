@@ -46,7 +46,7 @@ TEST(NyPizzaStoreTest, UnknownPizzaThrows) {
     NyPizzaStore store;
     EXPECT_THROW({
         auto pizza = store.order("unicorn");
-    }, std::runtime_error);
+    }, std::out_of_range);
 }
 
 // Chicago Pizza Store Tests
@@ -90,5 +90,5 @@ TEST(ChicagoPizzaStoreTest, UnknownPizzaThrows) {
     ChicagoPizzaStore store;
     EXPECT_THROW({
         auto pizza = store.order("unicorn");
-    }, std::runtime_error);
+    }, std::out_of_range);
 }
