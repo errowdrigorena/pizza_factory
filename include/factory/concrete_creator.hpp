@@ -4,7 +4,7 @@
 #include <type_traits>
 #include <utility>
 
-// GenericConcreteCreator
+// Concrete_creator
 //
 // This is a reusable utility for implementing the Factory Method 
 // or Abstract Factory patterns.
@@ -22,7 +22,7 @@
 // Suggested usage:
 //
 //   template<typename Derived, typename... Args>
-//   using MyBaseCreator = GenericConcreteCreator<MyBase, Derived, Args...>;
+//   using MyBaseCreator = Concrete_creator<MyBase, Derived, Args...>;
 //
 //   using FooCreator = MyBaseCreator<Foo>;                     // if Foo()
 //   using BarCreator = MyBaseCreator<Bar, int, std::string>;  // if Bar(int, std::string)
@@ -37,7 +37,7 @@ template<class Base, class Derived, typename... Args>
 class Concrete_creator
 {
     static_assert(std::is_base_of_v<Base, Derived>,
-                  "GenericConcreteCreator: Derived must inherit from Base");
+                  "Concrete_creator: Derived must inherit from Base");
 
 public:
     Concrete_creator() = default;
@@ -47,7 +47,7 @@ public:
         noexcept(std::is_nothrow_constructible_v<Derived, Args&&...>)
     {
         static_assert(std::is_constructible_v<Derived, Args&&...>,
-                      "GenericConcreteCreator: Arguments cannot construct Derived");
+                      "Concrete_creator: Arguments cannot construct Derived");
 
         return std::make_unique<Derived>(std::forward<Args>(args)...);
     }

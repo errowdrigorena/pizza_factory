@@ -6,9 +6,15 @@
 #include <type_traits>
 #include <stdexcept>
 
-// TDynamicFactory is a generic dynamic factory for runtime object creation.
+// Dynamic_factory is a generic dynamic factory for runtime object creation.
 // You register creators (functions or lambdas) identified by a key (typically an enum or string),
 // and later use that key to create instances of derived classes from a common base.
+//
+// Template parameters:
+//   - AbstractProduct:  The base class shared by all concrete products.
+//   - IdentifierType:   The key type used to register creators (e.g., enum or string).
+//   - ProductCreator:   Callable returning `std::unique_ptr<AbstractProduct>`; defaults
+//                       to `std::function<std::unique_ptr<AbstractProduct>()>`.
 template
 <
     class AbstractProduct,
