@@ -96,7 +96,7 @@ cd pizza_factory
 cmake -B build
 cmake --build build
 
-# Run tests
+# Run tests (GoogleTest will be fetched automatically)
 ctest --test-dir build --output-on-failure
 ```
 
