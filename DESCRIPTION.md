@@ -1,6 +1,6 @@
 # 🍕 C++ Pizza Patterns
 
-A modern, production-quality demonstration of Factory Method and Abstract Factory patterns in C++20.
+A modern, production-quality demonstration of Factory Method and Abstract Factory patterns in C++17.
 
 🔹 Clean separation of concerns  
 🔹 Dynamic and static factories  
