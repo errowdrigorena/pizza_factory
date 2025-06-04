@@ -7,7 +7,7 @@
 // GenericConcreteCreator
 //
 // This is a reusable utility for implementing the Factory Method 
-// or Abastract Factory patterns.
+// or Abstract Factory patterns.
 //
 // It provides a type-safe way to construct a concrete Derived class and return it
 // as a std::unique_ptr<Base>. It forwards constructor arguments perfectly,
