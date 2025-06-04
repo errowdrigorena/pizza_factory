@@ -14,10 +14,12 @@ digraph G {
         label="Abstract Factory";
         style=dashed;
         IngredientFactory [shape=record, label="{IngredientFactory|create_dough()|create_topping()}"];
+        NyIngredientFactory [label="NyIngredientFactory\ncreate_dough()->ThinCrustDough\ncreate_topping()->Bacon"];
         ChicagoIngredientFactory [label="ChicagoIngredientFactory\ncreate_dough()->ThickCrustDough\ncreate_topping()->Pepperoni"];
     }
 
     PizzaStore -> NYPizzaStore;
     PizzaStore -> ChicagoPizzaStore;
+    IngredientFactory -> NyIngredientFactory;
     IngredientFactory -> ChicagoIngredientFactory;
 }
