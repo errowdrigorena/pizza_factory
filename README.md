@@ -41,6 +41,9 @@ The image above is generated automatically from `docs/architecture.gv` as `docs/
 │       └── Mozzarella cheese
 └── 🏭 Abstract Factory
     ├── IngredientFactory (interface)
+    ├── NyIngredientFactory
+    │   ├── create_dough() -> ThinCrustDough
+    │   └── create_topping() -> Bacon
     └── ChicagoIngredientFactory
         ├── create_dough() -> ThickCrustDough
         └── create_topping() -> Pepperoni
@@ -66,6 +69,11 @@ The Factory Method pattern is implemented through two concrete pizza stores:
 ### Abstract Factory Pattern
 
 The Abstract Factory pattern is implemented through the ingredient factory system:
+
+#### NyIngredientFactory
+- Creates a family of New York-style ingredients
+- Produces thin crust dough and crispy bacon
+- Each ingredient is created with specific New York-style characteristics
 
 #### ChicagoIngredientFactory
 - Creates a family of Chicago-style ingredients
@@ -165,22 +173,26 @@ The Abstract Factory pattern is demonstrated through the ingredient factory syst
 
 ```cpp
 #include "chicago_ingredient_factory.hpp"
+#include "ny_ingredient_factory.hpp"
 #include <iostream>
 
 void demonstrateIngredientFactory() {
-    ChicagoIngredientFactory factory;
+    NyIngredientFactory ny_factory;
+    ChicagoIngredientFactory chicago_factory;
 
-    // Create a family of Chicago-style ingredients
-    auto dough = factory.create_dough();      // Creates thick crust
-    auto topping = factory.create_topping();  // Creates spicy pepperoni
+    std::cout << "Factory (NY) produces: "
+              << ny_factory.create_dough()->description() << " dough and "
+              << ny_factory.create_topping()->description() << " topping." << std::endl;
 
-    std::cout << "Factory (Chicago) produces: " << dough->description() 
-              << " dough and " << topping->description() << " topping." << std::endl;
+    std::cout << "Factory (Chicago) produces: "
+              << chicago_factory.create_dough()->description() << " dough and "
+              << chicago_factory.create_topping()->description() << " topping." << std::endl;
 }
 ```
 
 #### Expected Output
 ```
+Factory (NY) produces: Thin Crust Dough dough and Crispy Bacon topping.
 Factory (Chicago) produces: Thick Crust Dough dough and Spicy Pepperoni topping.
 ```
 
@@ -217,7 +229,7 @@ make coverage
 
 The test suite includes:
 - Factory Method tests for both NY and Chicago pizza stores
-- Abstract Factory tests for ingredient creation
+- Abstract Factory tests for Chicago and NY ingredient creation
 - Edge cases and error handling
 
 ## 🛠️ Tech Stack
