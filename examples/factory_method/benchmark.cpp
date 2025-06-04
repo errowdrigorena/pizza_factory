@@ -1,6 +1,7 @@
 #include "ny_pizza_store.hpp"
 #include <iostream>
 #include <chrono>
+#include <vector>
 
 int main() {
     NyPizzaStore store;
