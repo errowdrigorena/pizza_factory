@@ -9,4 +9,4 @@ A modern, production-quality demonstration of Factory Method and Abstract Factor
 🔹 Code coverage via gcovr  
 🔹 CI with GitHub Actions
 
-For more details, see the full README in `pizza-patterns/README.md`.
+For more details, see the full README in `README.md`.
