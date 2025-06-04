@@ -1,9 +1,9 @@
 #pragma once
-#include "pizza.hpp"
 #include "ingredient_creators/ingredient_creators.hpp"
+#include "pizza.hpp"
 #include <memory>
-#include <vector>
 #include <utility>
+#include <vector>
 
 inline auto create_chicago_pineapple_pizza() -> std::unique_ptr<Pizza> {
     ThickCrustDoughCreator dough_creator;
