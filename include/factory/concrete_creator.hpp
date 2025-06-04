@@ -43,7 +43,7 @@ public:
     Concrete_creator() = default;
 
     [[nodiscard]]
-    std::unique_ptr<Base> Create(Args&&... args) const
+    std::unique_ptr<Base> create(Args&&... args) const
         noexcept(std::is_nothrow_constructible_v<Derived, Args&&...>)
     {
         static_assert(std::is_constructible_v<Derived, Args&&...>,

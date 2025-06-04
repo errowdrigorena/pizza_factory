@@ -6,11 +6,11 @@
 class ChicagoIngredientFactory final : public PizzaIngredientFactory {
 public:
     std::unique_ptr<Dough> create_dough() const override {
-        return dough_creator_.Create();
+        return dough_creator_.create();
     }
 
     std::unique_ptr<Topping> create_topping() const override {
-        return topping_creator_.Create();
+        return topping_creator_.create();
     }
 
 private:
