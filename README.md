@@ -24,6 +24,10 @@ The code follows industry best practices and is designed to be:
 
 The project implements a composition-based architecture following the Open/Closed principle:
 
+![Architecture Diagram](docs/architecture.svg)
+
+The image above is generated automatically from `docs/architecture.gv` as `docs/architecture.svg` during the CI workflow.
+
 ```
 📦 PizzaFactory
 ├── 🏭 Factory Method
@@ -31,18 +35,15 @@ The project implements a composition-based architecture following the Open/Close
 │   │   ├── order(type: string) -> unique_ptr<Pizza>
 │   ├── NYPizzaStore
 │   │   ├── Thin crust dough
-│   │   ├── Marinara sauce
-│   │   └── Reggiano cheese
+│   │   └── Mozzarella cheese
 │   └── ChicagoPizzaStore
 │       ├── Thick crust dough
-│       ├── Plum tomato sauce
 │       └── Mozzarella cheese
 └── 🏭 Abstract Factory
     ├── IngredientFactory (interface)
     └── ChicagoIngredientFactory
-        ├── createDough() -> ThickCrustDough
-        ├── createSauce() -> PlumTomatoSauce
-        └── createCheese() -> MozzarellaCheese
+        ├── create_dough() -> ThickCrustDough
+        └── create_topping() -> Pepperoni
 ```
 
 ## 📖 Implementation Details
@@ -68,8 +69,13 @@ The Abstract Factory pattern is implemented through the ingredient factory syste
 
 #### ChicagoIngredientFactory
 - Creates a family of Chicago-style ingredients
-- Produces thick crust dough, plum tomato sauce, and mozzarella cheese
+- Produces thick crust dough and spicy pepperoni
 - Each ingredient is created with specific Chicago-style characteristics
+
+### Current Classes
+- **Dough**: `ThinCrustDough`, `ThickCrustDough`
+- **Toppings**: `MozzarellaCheese`, `Pepperoni`, `Pineapple`, `Bacon`, `Tomato`
+- **Pizzas**: created by `NyPizzaStore` and `ChicagoPizzaStore`
 
 ## 🚀 Getting Started
 
@@ -165,11 +171,11 @@ void demonstrateIngredientFactory() {
     ChicagoIngredientFactory factory;
 
     // Create a family of Chicago-style ingredients
-    auto dough = factory.createDough();      // Creates thick crust
-    auto pepperoni = factory.createPepperoni(); // Creates spicy pepperoni
+    auto dough = factory.create_dough();      // Creates thick crust
+    auto topping = factory.create_topping();  // Creates spicy pepperoni
 
     std::cout << "Factory (Chicago) produces: " << dough->description() 
-              << " dough and " << pepperoni->description() << " topping." << std::endl;
+              << " dough and " << topping->description() << " topping." << std::endl;
 }
 ```
 
@@ -253,7 +259,7 @@ The test suite includes:
 | Pattern | Purpose | Example |
 |---------|---------|---------|
 | Factory Method | Create pizza variants | `PizzaStore::order("cheese")` |
-| Abstract Factory | Create ingredient families | `IngredientFactory::createDough()` |
+| Abstract Factory | Create ingredient families | `IngredientFactory::create_dough()` |
 
 ## 📄 License
 

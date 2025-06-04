@@ -1,0 +1,23 @@
+digraph G {
+    node [shape=box, style=rounded];
+    rankdir=TB;
+
+    subgraph cluster_factory_method {
+        label="Factory Method";
+        style=dashed;
+        PizzaStore [shape=record, label="{PizzaStore|order(type): unique_ptr<Pizza>}"];
+        NYPizzaStore [label="NYPizzaStore\nThinCrustDough\nMozzarellaCheese"];
+        ChicagoPizzaStore [label="ChicagoPizzaStore\nThickCrustDough\nMozzarellaCheese"];
+    }
+
+    subgraph cluster_abstract_factory {
+        label="Abstract Factory";
+        style=dashed;
+        IngredientFactory [shape=record, label="{IngredientFactory|create_dough()|create_topping()}"];
+        ChicagoIngredientFactory [label="ChicagoIngredientFactory\ncreate_dough()->ThickCrustDough\ncreate_topping()->Pepperoni"];
+    }
+
+    PizzaStore -> NYPizzaStore;
+    PizzaStore -> ChicagoPizzaStore;
+    IngredientFactory -> ChicagoIngredientFactory;
+}
