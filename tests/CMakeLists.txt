@@ -24,6 +24,7 @@ add_executable(pizza_tests
 
 target_include_directories(pizza_tests PRIVATE
     ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/examples
     ${CMAKE_SOURCE_DIR}/examples/factory_method
     ${CMAKE_SOURCE_DIR}/examples/factory_method/ingredient_creators
     ${CMAKE_SOURCE_DIR}/examples/abstract_factory
