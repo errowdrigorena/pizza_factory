@@ -20,6 +20,7 @@ endif()
 add_executable(pizza_tests
     test_abstract_factory.cpp
     test_factory_method.cpp
+    test_dynamic_factory.cpp
 )
 
 target_include_directories(pizza_tests PRIVATE
